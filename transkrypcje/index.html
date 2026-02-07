@@ -203,8 +203,8 @@
         let allFiles = [];
         let currentFile = null;
 
-        // Bazowy URL do plikow (ten sam folder co index.html)
-        const BASE_URL = './';
+        // Bazowy URL - raw GitHub (aktualizuje sie natychmiast, bez cache)
+        const BASE_URL = 'https://raw.githubusercontent.com/jaskodobrz/transkrypcje/main/transkrypcje/';
 
         async function loadIndex() {
             try {
