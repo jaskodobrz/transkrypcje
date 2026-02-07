@@ -1,19 +1,11 @@
 [
   {
-    "filename": "1.txt",
-    "name": "1",
-    "source": "instagram",
-    "date": "2026-02-07 22:04",
-    "size": 1782,
-    "preview": "Jak sprawdzić, który model biznesu online będzie dobrym wyborem? No, myślę, że najprostszym sposobem, aby to zweryfikować, jest spojrzenie na zagranic"
-  },
-  {
     "filename": "2.txt",
     "name": "2",
     "source": "instagram",
     "date": "2026-02-07 21:52",
     "size": 820,
-    "preview": "Chciałbym Wam teraz pokazać, jak z tego zrobić to. Tylko ze stówa. Patrzcie, ten ekran ewidentnie potrzebuje naszej pomocy. Zobaczcie Wam, co się znaj"
+    "preview": "ChciaÅbym Wam teraz pokazaÄ, jak z tego zrobiÄ to. Tylko ze stÃ³wa. Patrzcie, ten ekran ewidentnie potrzebuje naszej pomocy. Zobaczcie Wam, co siÄ znaj"
   },
   {
     "filename": "zenek.txt",
@@ -21,7 +13,7 @@
     "source": "instagram",
     "date": "2026-02-07 21:45",
     "size": 51,
-    "preview": "Życie to są chwile, lubią czekać lat, to są chwile."
+    "preview": "Å»ycie to sÄ chwile, lubiÄ czekaÄ lat, to sÄ chwile."
   },
   {
     "filename": "test1.txt",
