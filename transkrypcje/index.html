@@ -38,6 +38,12 @@
             color: #888;
         }
 
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .search-box {
             padding: 10px 18px;
             border: 1px solid #0f3460;
@@ -54,12 +60,25 @@
             border-color: #e94560;
         }
 
+        .admin-btn {
+            padding: 10px 16px;
+            border: 1px solid #0f3460;
+            border-radius: 8px;
+            background: #1a1a2e;
+            color: #888;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .admin-btn:hover { border-color: #e94560; color: #e94560; }
+        .admin-btn.active { background: #e94560; color: #fff; border-color: #e94560; }
+
         .container {
             display: flex;
             height: calc(100vh - 80px);
         }
 
-        /* Lista transkrypcji - lewa strona */
         .sidebar {
             width: 380px;
             min-width: 380px;
@@ -74,16 +93,19 @@
             cursor: pointer;
             border-bottom: 1px solid #0f346033;
             transition: background 0.15s;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
         }
 
-        .file-item:hover {
-            background: #1a1a2e;
-        }
+        .file-item:hover { background: #1a1a2e; }
 
         .file-item.active {
             background: #0f3460;
             border-left: 3px solid #e94560;
         }
+
+        .file-item .file-info { flex: 1; min-width: 0; }
 
         .file-item .name {
             font-size: 15px;
@@ -109,6 +131,39 @@
             text-overflow: ellipsis;
         }
 
+        .delete-btn {
+            background: none;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: none;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .delete-btn:hover { background: #ff4444; color: #fff; }
+        .admin-mode .delete-btn { display: block; }
+
+        .delete-btn-big {
+            background: none;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 6px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: none;
+        }
+
+        .delete-btn-big:hover { background: #ff4444; color: #fff; }
+        .admin-mode .delete-btn-big { display: inline-block; }
+
         .badge {
             padding: 2px 8px;
             border-radius: 4px;
@@ -122,7 +177,6 @@
         .badge.youtube { background: #ff0000; color: #fff; }
         .badge.unknown { background: #444; color: #fff; }
 
-        /* Panel treści - prawa strona */
         .content {
             flex: 1;
             padding: 30px 40px;
@@ -138,11 +192,17 @@
             font-size: 18px;
         }
 
+        .content .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
         .content .title {
             font-size: 20px;
             font-weight: 700;
             color: #e94560;
-            margin-bottom: 8px;
         }
 
         .content .info {
@@ -161,18 +221,63 @@
             color: #d0d0d0;
         }
 
-        .loading {
-            color: #888;
-            font-style: italic;
+        .loading { color: #888; font-style: italic; }
+        .empty { text-align: center; padding: 40px; color: #666; }
+
+        /* Modal potwierdzenia */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
         }
 
-        .empty {
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
             text-align: center;
-            padding: 40px;
-            color: #666;
         }
 
-        /* Responsywny - telefon */
+        .modal h3 { color: #e94560; margin-bottom: 10px; }
+        .modal p { color: #aaa; margin-bottom: 20px; font-size: 14px; }
+
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .modal-btn.cancel { background: #333; color: #aaa; }
+        .modal-btn.cancel:hover { background: #444; }
+        .modal-btn.confirm { background: #ff4444; color: #fff; }
+        .modal-btn.confirm:hover { background: #ff2222; }
+
+        /* Token input */
+        .token-modal input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #0f3460;
+            border-radius: 8px;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-size: 13px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
         @media (max-width: 768px) {
             .container { flex-direction: column; height: auto; }
             .sidebar { width: 100%; min-width: 100%; max-height: 40vh; border-right: none; border-bottom: 2px solid #0f3460; }
@@ -187,10 +292,13 @@
             <h1>Transkrypcje</h1>
             <span class="stats" id="stats"></span>
         </div>
-        <input type="text" class="search-box" id="search" placeholder="Szukaj po nazwie...">
+        <div class="header-right">
+            <input type="text" class="search-box" id="search" placeholder="Szukaj po nazwie...">
+            <button class="admin-btn" id="adminBtn" onclick="toggleAdmin()">Admin</button>
+        </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="mainContainer">
         <div class="sidebar" id="sidebar">
             <div class="loading" style="padding: 20px;">Ladowanie...</div>
         </div>
@@ -199,12 +307,41 @@
         </div>
     </div>
 
+    <!-- Modal potwierdzenia usuniecia -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h3>Usunac transkrypcje?</h3>
+            <p id="confirmText"></p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Anuluj</button>
+                <button class="modal-btn confirm" onclick="confirmDelete()">Usun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal tokenu -->
+    <div class="modal-overlay" id="tokenModal">
+        <div class="modal token-modal">
+            <h3>Tryb Admin</h3>
+            <p>Wpisz GitHub token zeby moc usuwac transkrypcje</p>
+            <input type="password" id="tokenInput" placeholder="ghp_...">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeTokenModal()">Anuluj</button>
+                <button class="modal-btn confirm" style="background:#e94560" onclick="saveToken()">Zapisz</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let allFiles = [];
         let currentFile = null;
+        let adminMode = false;
+        let githubToken = localStorage.getItem('gh_token') || '';
+        let pendingDelete = null;
 
-        // Bazowy URL - raw GitHub (aktualizuje sie natychmiast, bez cache)
-        const BASE_URL = 'https://raw.githubusercontent.com/jaskodobrz/transkrypcje/main/transkrypcje/';
+        const REPO = 'jaskodobrz/transkrypcje';
+        const BASE_URL = 'https://raw.githubusercontent.com/' + REPO + '/main/transkrypcje/';
+        const API_URL = 'https://api.github.com/repos/' + REPO + '/contents/transkrypcje/';
 
         async function loadIndex() {
             try {
@@ -229,20 +366,23 @@
             sidebar.innerHTML = files.map(f => `
                 <div class="file-item ${currentFile === f.filename ? 'active' : ''}"
                      onclick="loadFile('${f.filename}')">
-                    <div class="name">${escapeHtml(f.name)}</div>
-                    <div class="meta">
-                        <span class="badge ${f.source}">${f.source}</span>
-                        <span>${f.date}</span>
-                        <span>${(f.size / 1000).toFixed(1)} KB</span>
+                    <div class="file-info">
+                        <div class="name">${escapeHtml(f.name)}</div>
+                        <div class="meta">
+                            <span class="badge ${f.source}">${f.source}</span>
+                            <span>${f.date}</span>
+                            <span>${(f.size / 1000).toFixed(1)} KB</span>
+                        </div>
+                        <div class="preview">${escapeHtml(f.preview || '')}</div>
                     </div>
-                    <div class="preview">${escapeHtml(f.preview || '')}</div>
+                    <button class="delete-btn" onclick="event.stopPropagation(); askDelete('${f.filename}')">Usun</button>
                 </div>
             `).join('');
         }
 
         async function loadFile(filename) {
             currentFile = filename;
-            renderList(getFilteredFiles()); // podswietl aktywny
+            renderList(getFilteredFiles());
 
             const content = document.getElementById('content');
             content.innerHTML = '<div class="loading">Ladowanie transkrypcji...</div>';
@@ -257,7 +397,10 @@
                 const date = fileInfo ? fileInfo.date : '';
 
                 content.innerHTML = `
-                    <div class="title">${escapeHtml(filename)}</div>
+                    <div class="title-row">
+                        <div class="title">${escapeHtml(filename)}</div>
+                        <button class="delete-btn-big" onclick="askDelete('${filename}')">Usun transkrypcje</button>
+                    </div>
                     <div class="info">
                         <span class="badge ${source}">${source}</span>
                         &nbsp; ${date} &nbsp; | &nbsp; ${text.length} znakow
@@ -266,6 +409,115 @@
                 `;
             } catch (e) {
                 content.innerHTML = '<div class="empty">Blad ladowania: ' + e.message + '</div>';
+            }
+        }
+
+        // === ADMIN / USUWANIE ===
+
+        function toggleAdmin() {
+            if (adminMode) {
+                adminMode = false;
+                document.getElementById('adminBtn').classList.remove('active');
+                document.getElementById('mainContainer').classList.remove('admin-mode');
+            } else {
+                if (githubToken) {
+                    adminMode = true;
+                    document.getElementById('adminBtn').classList.add('active');
+                    document.getElementById('mainContainer').classList.add('admin-mode');
+                } else {
+                    document.getElementById('tokenModal').classList.add('show');
+                }
+            }
+            renderList(getFilteredFiles());
+            if (currentFile) loadFile(currentFile);
+        }
+
+        function closeTokenModal() {
+            document.getElementById('tokenModal').classList.remove('show');
+        }
+
+        function saveToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token) {
+                githubToken = token;
+                localStorage.setItem('gh_token', token);
+                closeTokenModal();
+                toggleAdmin();
+            }
+        }
+
+        function askDelete(filename) {
+            pendingDelete = filename;
+            document.getElementById('confirmText').textContent = filename;
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function closeModal() {
+            pendingDelete = null;
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        async function confirmDelete() {
+            if (!pendingDelete || !githubToken) return;
+            const filename = pendingDelete;
+            closeModal();
+
+            try {
+                // 1. Pobierz sha pliku .txt
+                const fileResp = await fetch(API_URL + filename, {
+                    headers: { 'Authorization': 'token ' + githubToken }
+                });
+                if (fileResp.ok) {
+                    const fileData = await fileResp.json();
+                    // Usun plik
+                    await fetch(API_URL + filename, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'token ' + githubToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'Usun: ' + filename,
+                            sha: fileData.sha
+                        })
+                    });
+                }
+
+                // 2. Aktualizuj index.json
+                const indexResp = await fetch(API_URL + 'index.json', {
+                    headers: { 'Authorization': 'token ' + githubToken }
+                });
+                if (indexResp.ok) {
+                    const indexData = await indexResp.json();
+                    const indexContent = atob(indexData.content);
+                    let index = JSON.parse(indexContent);
+                    index = index.filter(e => e.filename !== filename);
+
+                    await fetch(API_URL + 'index.json', {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'token ' + githubToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'Usun z indexu: ' + filename,
+                            sha: indexData.sha,
+                            content: btoa(unescape(encodeURIComponent(JSON.stringify(index, null, 2))))
+                        })
+                    });
+                }
+
+                // 3. Odswiez liste
+                allFiles = allFiles.filter(f => f.filename !== filename);
+                if (currentFile === filename) {
+                    currentFile = null;
+                    document.getElementById('content').innerHTML = '<div class="placeholder">Transkrypcja usunieta</div>';
+                }
+                document.getElementById('stats').textContent = allFiles.length + ' transkrypcji';
+                renderList(getFilteredFiles());
+
+            } catch (e) {
+                alert('Blad usuwania: ' + e.message);
             }
         }
 
@@ -284,12 +536,10 @@
             return div.innerHTML;
         }
 
-        // Wyszukiwarka
         document.getElementById('search').addEventListener('input', () => {
             renderList(getFilteredFiles());
         });
 
-        // Start
         loadIndex();
     </script>
 </body>
