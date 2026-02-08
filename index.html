@@ -348,19 +348,19 @@
         let pendingDelete = null;
 
         const REPO = 'jaskodobrz/transkrypcje';
-        const BASE_URL = 'https://raw.githubusercontent.com/' + REPO + '/main/transkrypcje/';
+        const BASE_URL = 'https://cdn.jsdelivr.net/gh/' + REPO + '@main/transkrypcje/';
         const API_URL = 'https://api.github.com/repos/' + REPO + '/contents/transkrypcje/';
+        const PURGE_URL = 'https://purge.jsdelivr.net/gh/' + REPO + '@main/transkrypcje/';
 
         async function loadIndex() {
             try {
-                // Uzyj GitHub API (zawsze aktualne, bez cache)
-                const resp = await fetch(API_URL + 'index.json?t=' + Date.now(), {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' },
+                // Purge cache jsdelivr, potem pobierz swiezy plik
+                await fetch(PURGE_URL + 'index.json').catch(() => {});
+                const resp = await fetch(BASE_URL + 'index.json?t=' + Date.now(), {
                     cache: 'no-store'
                 });
                 if (!resp.ok) throw new Error('Brak index.json');
-                const data = await resp.json();
-                allFiles = JSON.parse(atob(data.content));
+                allFiles = await resp.json();
                 document.getElementById('stats').textContent = allFiles.length + ' transkrypcji';
                 renderList(allFiles);
             } catch (e) {
@@ -401,14 +401,13 @@
             content.innerHTML = '<div class="loading">Ladowanie transkrypcji...</div>';
 
             try {
-                // Uzyj GitHub API (zawsze aktualne, bez cache)
-                const resp = await fetch(API_URL + filename + '?t=' + Date.now(), {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' },
+                // Purge cache jsdelivr, potem pobierz swiezy plik
+                await fetch(PURGE_URL + filename).catch(() => {});
+                const resp = await fetch(BASE_URL + filename + '?t=' + Date.now(), {
                     cache: 'no-store'
                 });
                 if (!resp.ok) throw new Error('Nie znaleziono pliku');
-                const data = await resp.json();
-                const text = decodeURIComponent(escape(atob(data.content)));
+                const text = await resp.text();
 
                 const fileInfo = allFiles.find(f => f.filename === filename);
                 const source = fileInfo ? fileInfo.source : 'unknown';
