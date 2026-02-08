@@ -354,8 +354,9 @@
         async function loadIndex() {
             try {
                 // Uzyj GitHub API (zawsze aktualne, bez cache)
-                const resp = await fetch(API_URL + 'index.json', {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                const resp = await fetch(API_URL + 'index.json?t=' + Date.now(), {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' },
+                    cache: 'no-store'
                 });
                 if (!resp.ok) throw new Error('Brak index.json');
                 const data = await resp.json();
@@ -401,8 +402,9 @@
 
             try {
                 // Uzyj GitHub API (zawsze aktualne, bez cache)
-                const resp = await fetch(API_URL + filename, {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                const resp = await fetch(API_URL + filename + '?t=' + Date.now(), {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' },
+                    cache: 'no-store'
                 });
                 if (!resp.ok) throw new Error('Nie znaleziono pliku');
                 const data = await resp.json();
@@ -564,8 +566,8 @@
         });
 
         loadIndex();
-        // Auto-refresh listy co 30 sekund
-        setInterval(loadIndex, 30000);
+        // Auto-refresh listy co 2 minuty (limit API: 60 req/h)
+        setInterval(loadIndex, 120000);
     </script>
 </body>
 </html>
