@@ -353,9 +353,13 @@
 
         async function loadIndex() {
             try {
-                const resp = await fetch(BASE_URL + 'index.json?' + Date.now());
+                // Uzyj GitHub API (zawsze aktualne, bez cache)
+                const resp = await fetch(API_URL + 'index.json', {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
                 if (!resp.ok) throw new Error('Brak index.json');
-                allFiles = await resp.json();
+                const data = await resp.json();
+                allFiles = JSON.parse(atob(data.content));
                 document.getElementById('stats').textContent = allFiles.length + ' transkrypcji';
                 renderList(allFiles);
             } catch (e) {
@@ -396,9 +400,13 @@
             content.innerHTML = '<div class="loading">Ladowanie transkrypcji...</div>';
 
             try {
-                const resp = await fetch(BASE_URL + filename + '?' + Date.now());
+                // Uzyj GitHub API (zawsze aktualne, bez cache)
+                const resp = await fetch(API_URL + filename, {
+                    headers: { 'Accept': 'application/vnd.github.v3+json' }
+                });
                 if (!resp.ok) throw new Error('Nie znaleziono pliku');
-                const text = await resp.text();
+                const data = await resp.json();
+                const text = decodeURIComponent(escape(atob(data.content)));
 
                 const fileInfo = allFiles.find(f => f.filename === filename);
                 const source = fileInfo ? fileInfo.source : 'unknown';
